@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .game-container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        h1 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        #pongCanvas {
+            background-color: #000;
+            display: block;
+            margin: 0 auto 20px;
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .score-display {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            color: #fff;
+        }
+        
+        .score-item {
+            flex: 1;
+        }
+        
+        .score-item label {
+            display: block;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .score-item .score {
+            font-size: 2em;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 1.1em;
+            background-color: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        button:hover {
+            background-color: #ffed4e;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .instructions {
+            color: #bbb;
+            margin-top: 20px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .instructions strong {
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎮 PONG GAME</h1>
+        
+        <canvas id="pongCanvas" width="800" height="400"></canvas>
+        
+        <div class="score-display">
+            <div class="score-item">
+                <label>Player</label>
+                <div class="score" id="playerScore">0</div>
+            </div>
+            <div class="score-item">
+                <label>Computer</label>
+                <div class="score" id="computerScore">0</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn">Start Game</button>
+            <button id="resetBtn">Reset Game</button>
+        </div>
+        
+        <div class="instructions">
+            <strong>How to Play:</strong><br>
+            ⬆️ Use <strong>Arrow Keys Up/Down</strong> or <strong>Move Mouse</strong> to control your paddle<br>
+            Click <strong>Start Game</strong> to begin playing against the AI<br>
+            First to score wins the rally!
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
