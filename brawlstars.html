@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Clash - Brawl Stars Style Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            position: relative;
+            width: 1000px;
+            height: 600px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 3px solid #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0f3460 0%, #1a1a2e 100%);
+        }
+
+        .ui-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .health-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #00d4ff;
+            min-width: 300px;
+        }
+
+        .health-label {
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .health-fill {
+            width: 250px;
+            height: 20px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #00d4ff;
+        }
+
+        .health-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00d4ff);
+            width: 100%;
+            transition: width 0.2s;
+        }
+
+        .ammo-bar {
+            margin-top: 8px;
+        }
+
+        .ammo-fill {
+            width: 250px;
+            height: 12px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #ff6b00;
+        }
+
+        .ammo-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b00, #ffaa00);
+            width: 100%;
+            transition: width 0.2s;
+        }
+
+        .score-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .enemies-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ff6b00;
+            color: #ff6b00;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .character-select {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            font-size: 12px;
+            min-width: 180px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 40px;
+            border-radius: 12px;
+            border: 3px solid #ff6b00;
+            text-align: center;
+            z-index: 20;
+            display: none;
+            pointer-events: auto;
+        }
+
+        .game-over.show {
+            display: block;
+        }
+
+        .game-over h1 {
+            color: #ff6b00;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .game-over p {
+            color: #00d4ff;
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .game-over button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .game-over button:hover {
+            transform: scale(1.05);
+        }
+
+        .powerup-info {
+            position: absolute;
+            top: 150px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            font-size: 12px;
+            min-width: 280px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div class="ui-container">
+            <div class="health-bar">
+                <div class="health-label">PLAYER HEALTH</div>
+                <div class="health-fill">
+                    <div class="health-bar-inner" id="healthBarInner" style="width: 100%"></div>
+                </div>
+                <div class="ammo-bar">
+                    <div style="color: #ff6b00; font-size: 12px; margin-bottom: 4px;">AMMO</div>
+                    <div class="ammo-fill">
+                        <div class="ammo-bar-inner" id="ammoBarInner" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="score-container">
+                Score: <span id="scoreDisplay">0</span>
+            </div>
+
+            <div class="powerup-info">
+                <div style="margin-bottom: 8px;">⭐ ACTIVE PERKS</div>
+                <div id="powerupDisplay">None</div>
+            </div>
+
+            <div class="enemies-info">
+                <div style="margin-bottom: 8px;">👾 ENEMIES DEFEATED</div>
+                <div id="enemiesDisplay">0</div>
+            </div>
+
+            <div class="character-select">
+                <div style="margin-bottom: 8px;">🎮 CHARACTER</div>
+                <div id="characterDisplay">Gunner</div>
+            </div>
+
+            <div class="controls">
+                <div><strong>CONTROLS</strong></div>
+                <div>W/A/S/D - Move</div>
+                <div>Mouse - Aim & Shoot</div>
+                <div>SPACE - Dash</div>
+                <div>R - Reload</div>
+            </div>
+
+            <div class="game-over" id="gameOver">
+                <h1>GAME OVER</h1>
+                <p>Final Score: <span id="finalScore">0</span></p>
+                <p>Enemies Defeated: <span id="finalEnemies">0</span></p>
+                <button onclick="location.reload()">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="brawlstars.js"></script>
+</body>
+</html>
